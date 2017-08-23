@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <meta name="msapplication-tap-highlight" content="no"/>
+  <meta name="viewport"
+        content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width"/>
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"/>
+  <link rel="stylesheet" type="text/css" href="css/index.css"/>
+  <style>
+    #div2{
+      width:100px;
+      height:100px;
+      background: #ccc;
+    }
+  </style>
+  <title>Hello World</title>
+</head>
+
+<body>
+<div class="app">
+  <h1>指向</h1>
+  <input type="button" id="btn1" value="获取一次朝向">
+  <input type="button" id="btn2" value="开始实时朝向">
+  <input type="button" id="btn3" value="关闭实时朝向">
+  <div id="div1"></div>
+  <img src="http://img0.imgtn.bdimg.com/it/u=910616928,224172156&fm=26&gp=0.jpg" alt="" width="80" id="img1">
+</div>
+<script type="text/javascript" src="cordova.js"></script>
+<script>
+  function rnd(n,m){return parseInt(n+Math.random()*(m-n))}
+
+  var oBtn1=document.querySelector('#btn1');
+  var oBtn2=document.querySelector('#btn2');
+  var oBtn3=document.querySelector('#btn3');
+  var oDiv=document.querySelector('#div1');
+  var oImg=document.querySelector('#img1');
+  var watchID=null;
+
+  oBtn3.onclick=function(){
+    navigator.compass.clearWatch(watchID);
+  };
+  oBtn2.onclick=function(){
+    function onSuccess(heading) {
+      oDiv.innerHTML = 'Heading: ' + heading.magneticHeading;
+      oImg.style.webkitTransform='rotate('+heading.magneticHeading+'deg)'
+    };
+
+    function onError(compassError) {
+      alert('Compass error: ' + compassError.code);
+    };
+
+    var options = { frequency: 100 };       //每隔3秒更新一次
+
+    watchID = navigator.compass.watchHeading(onSuccess, onError, options);
+  }
+  oBtn1.onclick=function(){
+    function onSuccess(heading) {
+      oDiv.innerHTML=heading.magneticHeading;
+    };
+
+    function onError(error) {
+      alert('CompassError: '+error.code);
+    };
+
+    navigator.compass.getCurrentHeading(onSuccess, onError);
+
+  };
+
+
+</script>
+</body>
+
+</html>
